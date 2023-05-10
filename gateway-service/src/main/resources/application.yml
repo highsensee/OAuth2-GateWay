@@ -1,0 +1,104 @@
+server:
+  port: 8801
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.200.128:8848
+    gateway:
+      routes: # 配置路由路径
+        - id: system-service-route
+          uri: lb://system-service
+          predicates:
+            - Path=/api/**
+          filters:
+            - StripPrefix=1
+        - id: auth-service-route
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: oauth2-auth-login
+          uri: lb://auth-service
+          predicates:
+            - Path=/login
+          filters:
+            - PreserveHostHeader
+        - id: oauth2-auth-token
+          uri: lb://auth-service
+          predicates:
+            - Path=/oauth/token
+          filters:
+            - PreserveHostHeader
+        - id: oauth2-auth-authorize
+          uri: lb://auth-service
+          predicates:
+            - Path=/oauth/authorize
+          filters:
+            - PreserveHostHeader
+      discovery:
+        locator:
+          enabled: true # 开启从注册中心动态创建路由的功能
+          lower-case-service-id: true # 使用小写服务名，默认是大写
+
+# Security 配置
+---
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8800/rsa/publicKey' # 配置RSA的公钥访问地址
+
+# Redis 配置
+---
+spring:
+  redis:
+    database: 0
+    port: 6379
+    host: 192.168.200.128
+    password:
+# 配置白名单路径
+secure:
+  ignore:
+    urls:
+      - "/actuator/**"
+      - "/oauth/token"
+      - "/oauth/authorize"
+      - "/login"
+
+
+# Mysql
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.200.128:3306/micro?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=true&serverTimezone=GMT&useSSL=false
+    username: root
+    password: andylau
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 20
+      idle-timeout: 10000
+      max-lifetime: 1800000
+      connection-timeout: 40000
+
+# Mybatis
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  global-config:
+    db-config:
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+    banner: false

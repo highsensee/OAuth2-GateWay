@@ -1,0 +1,60 @@
+server:
+  port: 8802
+
+---
+spring:
+  profiles:
+    active: dev
+  application:
+    name: system-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.200.128:8848
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# Redis
+---
+spring:
+  redis:
+    database: 0
+    port: 6379
+    host: 192.168.200.128
+    password:
+
+# Mysql
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.200.128:3306/micro?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=true&serverTimezone=GMT&useSSL=false
+    username: root
+    password: andylau
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 20
+      idle-timeout: 10000
+      max-lifetime: 1800000
+      connection-timeout: 40000
+
+# Mybatis
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  global-config:
+    db-config:
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+    banner: false
+
+# api管理
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
