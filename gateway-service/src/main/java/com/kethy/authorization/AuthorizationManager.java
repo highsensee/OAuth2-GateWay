@@ -66,6 +66,6 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
             redisTemplate.opsForHash().put(RedisConstant.RESOURCE_ROLES_MAP, path, roles);
             return roles;
         }
-        return null;
+        return obj;
     }
 }
