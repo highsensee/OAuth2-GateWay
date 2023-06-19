@@ -11,7 +11,9 @@
 
 基础组件服务这里不在赘述。
 
-### 一、认证服务`auth-service`
+### 一、认证服务
+
+**auth-service** 
 
 > 1、首先来搭建认证服务，它将作为Oauth2的认证服务使用，并且网关服务的鉴权功能也需要依赖它，在pom.xml中添加相关依赖，主要是Spring Security、Oauth2、JWT、Redis相关依赖
 
@@ -398,7 +400,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 ```
 
-### 二、网关服务`gateway-service`
+### 二、网关服务
+
+**gateway-service**
 
 接下来搭建网关服务，它将作为Oauth2的资源服务、客户端服务使用，对访问微服务的请求进行统一的校验认证和鉴权操作
 
@@ -780,7 +784,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
 ```
 
-### 三、系统服务（API服务）`system-service`
+### 三、系统服务
+
+**system-service** 
 
 最后我们搭建一个API服务，它不会集成和实现任何安全相关逻辑，全靠网关来保护它
 
@@ -932,3 +938,57 @@ public class UserController {
 }
 
 ```
+
+## 功能演示
+
+在此之前先启动我们的 Nacos 和 Redis 服务，然后依次启动`oauth2-auth`、`oauth2-gateway`及`oauth2-api`
+
+> 1、使用密码模式获取JWT令牌，访问地址：http://localhost:8801/oauth/token
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/1.png) 
+
+> 2、使用获取到的JWT令牌访问获取当前登录用户信息的接口
+
+访问地址：http://localhost:8801/api/user/currentUser 
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/2.png) 
+
+> 4、当token不存在时，访问地址：http://localhost:8801/api/user/currentUser 
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/3.png) 
+
+> 5、当JWT令牌过期时，使用refresh_token获取新的JWT令牌
+
+访问地址：http://localhost:8801/oauth/token 
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/4.png) 
+
+> 6、使用授码模式登录
+
+先访问地址获取授权码：http://localhost:8801/oauth/authorize?response_type=code&client_id=client-app-2&redirect_uri=https://www.baidu.com
+
+> 7、访问地址，跳转登录页面
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/5.png) 
+
+> 8、登录成功，进入授权页面
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/6.png) 
+
+> 9、通过授权，拿到授权码
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/7.png) 
+
+> 10、拿到授权码，访问地址登录：http://localhost:8801/oauth/token
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/8.png) 
+
+> 11、使用没有访问权限的`user`账号登录，访问接口时会返回如下信息，
+
+访问地址：http://localhost:8801/api/hello 
+
+![2.png](https://github.com/highsensee/picture-repo/blob/master/OAuth2-GateWay/9.png) 
+
+## 项目源码地址
+
+https://github.com/highsensee/OAuth2-GateWay.git
