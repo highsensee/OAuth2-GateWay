@@ -1,7 +1,7 @@
 # Gateway-Oauth2
 
 ## 架构
-通过认证服务(`auth-service`)进行统一认证，然后通过网关（`oauth2-gateway`）来统一校验认证和鉴权。采用Nacos作为注册中心，Gateway作为网关，使用nimbus-jose-jwtJWT库操作JWT令牌。
+通过认证服务(`auth-service`)进行统一认证，然后通过网关（`gateway-service`）来统一校验认证和鉴权。采用Nacos作为注册中心，Gateway作为网关，使用nimbus-jose-jwtJWT库操作JWT令牌。
 
 - common-utils：公共组件服务，包含各种静态工具类、通用常量
 - auth-service：Oauth2认证服务，负责对登录用户进行认证，整合Spring Security Oauth2
@@ -941,7 +941,7 @@ public class UserController {
 
 ## 功能演示
 
-在此之前先启动我们的 Nacos 和 Redis 服务，然后依次启动`oauth2-auth`、`oauth2-gateway`及`oauth2-api`
+在此之前先启动我们的 Nacos 和 Redis 服务，然后依次启动`auth-service`、`gateway-service`及`system-service`
 
 > 1、使用密码模式获取JWT令牌，访问地址：http://localhost:8801/oauth/token
 
