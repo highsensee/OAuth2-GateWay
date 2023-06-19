@@ -10,7 +10,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.200.128:8848
+        server-addr: 10.0.3.218:8848
+        group: micro
+        namespace: 77a852a1-860b-4774-85ae-a89e8f679a92
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
@@ -20,15 +22,15 @@ spring:
   redis:
     database: 0
     port: 6379
-    host: 192.168.200.128
-    password:
+    host: 10.0.3.218
+    password: andylau
 
 # Mysql
 ---
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.200.128:3306/micro?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=true&serverTimezone=GMT&useSSL=false
+    url: jdbc:mysql://10.0.3.218:3306/micro?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=true&serverTimezone=GMT&useSSL=false
     username: root
     password: andylau
     type: com.zaxxer.hikari.HikariDataSource
